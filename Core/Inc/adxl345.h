@@ -10,6 +10,8 @@
 
 #include "main.h"
 
+#define ADXL345_DEVICE_ADDRESS 0xA6
+
 #define DEVID       	0x00
 #define THRESH_TAP      0x1D
 #define OFSX       		0x1E
@@ -40,6 +42,10 @@
 #define DATAZ1       	0x37
 #define FIFO_CTL       	0x38
 #define FIFO_STATUS     0x39
+
+#define TIMEOUT         1000
+
+int ADXL345_ScanDeviceID(void);
 
 
 
