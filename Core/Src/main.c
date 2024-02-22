@@ -45,7 +45,15 @@ I2C_HandleTypeDef hi2c1;
 
 /* USER CODE BEGIN PV */
 
-int deviceAddress = 0;
+ADXL345InitStatus result;
+
+int16_t xValue = 0;
+int16_t yValue = 0;
+int16_t zValue = 0;
+
+float gX = 0;
+float gY = 0;
+float gZ = 0;
 
 /* USER CODE END PV */
 
@@ -93,7 +101,8 @@ int main(void)
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
 
-  deviceAddress = ADXL345_ScanDeviceID();
+  result = ADXL345_Init();
+
 
   /* USER CODE END 2 */
 
@@ -104,7 +113,15 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  xValue = ADXL345_getAxisValue(X);
+	  yValue = ADXL345_getAxisValue(Y);
+	  zValue = ADXL345_getAxisValue(Z);
+
+	  gX = ADXL345_getGValue(X, SCALE_FACTOR_4G);
+	  gY = ADXL345_getGValue(Y, SCALE_FACTOR_4G);
+	  gZ = ADXL345_getGValue(Z, SCALE_FACTOR_4G);
 	  HAL_GPIO_WritePin(GPIOD, green_Pin | red_Pin | orange_Pin | blue_Pin, GPIO_PIN_SET);
+	  HAL_Delay(20);
   }
   /* USER CODE END 3 */
 }

@@ -45,8 +45,95 @@
 
 #define TIMEOUT         1000
 
+#define X               DATAX0
+#define Y               DATAY0
+#define Z               DATAZ0
+
+#define SCALE_FACTOR_2G    (float)1/256.0
+#define SCALE_FACTOR_4G    (float)1/128.0
+#define SCALE_FACTOR_8G    (float)1/64.0
+#define SCALE_FACTOR_16G    (float)1/32.0
+
+/* @WAKEUP_FREQUENCY*/
+#define WAKEUP_8HZ      0x00
+#define WAKEUP_4HZ      0x01
+#define WAKEUP_2HZ      0x02
+#define WAKEUP_1HZ      0x03
+
+#define RANGE_2G        0x00
+#define RANGE_4G        0x01
+#define RANGE_8G        0x02
+#define RANGE_16G       0x03
+
+#define BANDWIDTH_RATE_1600  0x0F
+#define BANDWIDTH_RATE_800   0x0E
+#define BANDWIDTH_RATE_400   0x0D
+#define BANDWIDTH_RATE_200   0x0C
+#define BANDWIDTH_RATE_100   0x0B
+#define BANDWIDTH_RATE_50    0x0A
+#define BANDWIDTH_RATE_25    0x09
+
+
+
+typedef enum{
+	READ_FAIL = 0,
+	READ_SUCCESS = 1,
+}ADXL345ReadStatus;
+
+typedef enum{
+	Write_FAIL = 0,
+	Write_SUCCESS = 1,
+}ADXL345WriteStatus;
+
+typedef enum{
+	INIT_FAIL = 0,
+	INIT_SUCCESS = 1,
+}ADXL345InitStatus;
+
+
+typedef struct{
+
+	uint8_t Wakeup: 2; /* Bits 0-1 (@WAKEUP_FREQUENCY )  0x00-> 8Hz, 0x01-> 4Hz, 0x02-> 2Hz, 0x03-> 1Hz */
+	uint8_t Sleep: 1; // Bits 2 (sleep)
+	uint8_t Measure: 1;// Bits 3 (default 0x01)
+	uint8_t AUTO_SLEEP: 1;// Bits 4
+	uint8_t Link: 1;// Bits 5
+	uint8_t Reserved: 2;// Bits 6-7 (reserved)
+
+}PowerControlRegister_t;
+
+typedef struct{
+
+	uint8_t Range: 2; /* Bits 0-1 (range )  0x00-> +-2g, 0x01-> +-4g, 0x02-> +-8g, 0x03-> +-16g */
+	uint8_t Justify: 1; // Bits 2
+	uint8_t FULL_RES: 1;// Bits 3
+	uint8_t Reserved: 1;// Bits 4(reserved)
+	uint8_t INT_INVERT: 1;// Bits 5
+	uint8_t SPI: 1;// Bits 6
+	uint8_t SELF_TEST: 1;// Bits 7
+
+}DataFormatRegister_t;
+
+
+typedef struct{
+
+	uint8_t Range: 4; /* Bits 0-3 (range )  0x00-> +-2g, 0x01-> +-4g, 0x02-> +-8g, 0x03-> +-16g */
+	uint8_t LOW_POWER: 1; // Bits 4
+	uint8_t Reserved: 3;// Bits 5-7
+
+}BWRATERegister_t;
+
 int ADXL345_ScanDeviceID(void);
 
+ADXL345InitStatus ADXL345_Init(void);
+
+ADXL345ReadStatus ADXL345_ReadRegisterData(uint16_t registerAddress, uint16_t sizeofData, uint8_t *dataBuffer);
+
+ADXL345WriteStatus ADXL345_WriteRegisterData(uint16_t registerAddress, uint16_t value);
+
+int16_t ADXL345_getAxisValue(uint8_t axis);
+
+float ADXL345_getGValue(uint8_t axis, float scaleFactor);
 
 
 #endif /* INC_ADXL345_H_ */
