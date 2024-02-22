@@ -101,7 +101,7 @@ int main(void)
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
 
-  result = ADXL345_Init();
+  result = ADXL345_Init(&hi2c1);
 
 
   /* USER CODE END 2 */
@@ -113,13 +113,13 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  xValue = ADXL345_getAxisValue(X);
-	  yValue = ADXL345_getAxisValue(Y);
-	  zValue = ADXL345_getAxisValue(Z);
+	  xValue = ADXL345_getAxisValue(&hi2c1, X);
+	  yValue = ADXL345_getAxisValue(&hi2c1, Y);
+	  zValue = ADXL345_getAxisValue(&hi2c1, Z);
 
-	  gX = ADXL345_getGValue(X, SCALE_FACTOR_4G);
-	  gY = ADXL345_getGValue(Y, SCALE_FACTOR_4G);
-	  gZ = ADXL345_getGValue(Z, SCALE_FACTOR_4G);
+	  gX = ADXL345_getGValue(&hi2c1, X, SCALE_FACTOR_4G);
+	  gY = ADXL345_getGValue(&hi2c1, Y, SCALE_FACTOR_4G);
+	  gZ = ADXL345_getGValue(&hi2c1, Z, SCALE_FACTOR_4G);
 	  HAL_GPIO_WritePin(GPIOD, green_Pin | red_Pin | orange_Pin | blue_Pin, GPIO_PIN_SET);
 	  HAL_Delay(20);
   }

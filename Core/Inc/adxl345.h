@@ -10,8 +10,10 @@
 
 #include "main.h"
 
+/* @def_group device_address */
 #define ADXL345_DEVICE_ADDRESS 0xA6
 
+/* @def_group register */
 #define DEVID       	0x00
 #define THRESH_TAP      0x1D
 #define OFSX       		0x1E
@@ -45,35 +47,46 @@
 
 #define TIMEOUT         1000
 
+/* @def_group axis */
 #define X               DATAX0
 #define Y               DATAY0
 #define Z               DATAZ0
 
+/* @def_group scale_factor */
 #define SCALE_FACTOR_2G    (float)1/256.0
 #define SCALE_FACTOR_4G    (float)1/128.0
 #define SCALE_FACTOR_8G    (float)1/64.0
 #define SCALE_FACTOR_16G    (float)1/32.0
 
-/* @WAKEUP_FREQUENCY*/
+/* @def_group wakeup_rate*/
 #define WAKEUP_8HZ      0x00
 #define WAKEUP_4HZ      0x01
 #define WAKEUP_2HZ      0x02
 #define WAKEUP_1HZ      0x03
 
+/* @def_group g_range*/
 #define RANGE_2G        0x00
 #define RANGE_4G        0x01
 #define RANGE_8G        0x02
 #define RANGE_16G       0x03
 
-#define BANDWIDTH_RATE_1600  0x0F
-#define BANDWIDTH_RATE_800   0x0E
-#define BANDWIDTH_RATE_400   0x0D
-#define BANDWIDTH_RATE_200   0x0C
-#define BANDWIDTH_RATE_100   0x0B
-#define BANDWIDTH_RATE_50    0x0A
-#define BANDWIDTH_RATE_25    0x09
-
-
+/* @def_group Bandwidth_rate*/
+#define BANDWIDTH_RATE_1600    0x0F
+#define BANDWIDTH_RATE_800     0x0E
+#define BANDWIDTH_RATE_400     0x0D
+#define BANDWIDTH_RATE_200     0x0C
+#define BANDWIDTH_RATE_100     0x0B
+#define BANDWIDTH_RATE_50      0x0A
+#define BANDWIDTH_RATE_25      0x09
+#define BANDWIDTH_RATE_12_5    0x08
+#define BANDWIDTH_RATE_6_25    0x07
+#define BANDWIDTH_RATE_3_13    0x06
+#define BANDWIDTH_RATE_1_56    0x05
+#define BANDWIDTH_RATE_0_78    0x04
+#define BANDWIDTH_RATE_0_39    0x03
+#define BANDWIDTH_RATE_0_20    0x02
+#define BANDWIDTH_RATE_0_10    0x01
+#define BANDWIDTH_RATE_0_05    0x00
 
 typedef enum{
 	READ_FAIL = 0,
@@ -123,17 +136,17 @@ typedef struct{
 
 }BWRATERegister_t;
 
-int ADXL345_ScanDeviceID(void);
+int ADXL345_ScanDeviceID(I2C_HandleTypeDef *hi2cx);
 
-ADXL345InitStatus ADXL345_Init(void);
+ADXL345InitStatus ADXL345_Init(I2C_HandleTypeDef *hi2cx);
 
-ADXL345ReadStatus ADXL345_ReadRegisterData(uint16_t registerAddress, uint16_t sizeofData, uint8_t *dataBuffer);
+//ADXL345ReadStatus ADXL345_ReadRegisterData(I2C_HandleTypeDef *hi2cx, uint16_t registerAddress, uint16_t sizeofData, uint8_t *dataBuffer);
 
-ADXL345WriteStatus ADXL345_WriteRegisterData(uint16_t registerAddress, uint16_t value);
+//ADXL345WriteStatus ADXL345_WriteRegisterData(I2C_HandleTypeDef *hi2cx, uint16_t registerAddress, uint16_t value);
 
-int16_t ADXL345_getAxisValue(uint8_t axis);
+int16_t ADXL345_getAxisValue(I2C_HandleTypeDef *hi2cx, uint8_t axis);
 
-float ADXL345_getGValue(uint8_t axis, float scaleFactor);
+float ADXL345_getGValue(I2C_HandleTypeDef *hi2cx, uint8_t axis, float scaleFactor);
 
 
 #endif /* INC_ADXL345_H_ */

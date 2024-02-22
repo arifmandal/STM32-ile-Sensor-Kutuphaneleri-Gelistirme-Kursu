@@ -7,45 +7,50 @@
 
 #include "adxl345.h"
 
-extern I2C_HandleTypeDef hi2c1;
 
+/**
+  * @brief  To find 7 bits address value
+  * @param  hi2c Pointer to a I2C_HandleTypeDef structure that contains
+  *                the configuration information for the specified I2C.
+  * @retval int
+  */
 
-int ADXL345_ScanDeviceID(){
+int ADXL345_ScanDeviceID(I2C_HandleTypeDef *hi2cx){
 
 	for (uint8_t address= 0; address < 255; address++) {
-		if (HAL_I2C_IsDeviceReady(&hi2c1, address, 1, TIMEOUT) == HAL_OK) {
+		if (HAL_I2C_IsDeviceReady(hi2cx, address, 1, TIMEOUT) == HAL_OK) {
 			return address;
 		}
 	}
 	return -1;
 }
 
-ADXL345ReadStatus ADXL345_ReadRegisterData(uint16_t registerAddress, uint16_t sizeofData, uint8_t *dataBuffer){
+static ADXL345ReadStatus ADXL345_ReadRegisterData(I2C_HandleTypeDef *hi2cx, uint16_t registerAddress, uint16_t sizeofData, uint8_t *dataBuffer){
 
-	if (HAL_I2C_Mem_Read(&hi2c1, ADXL345_DEVICE_ADDRESS, registerAddress, 1, dataBuffer, sizeofData, TIMEOUT) == HAL_OK) {
+	if (HAL_I2C_Mem_Read(hi2cx, ADXL345_DEVICE_ADDRESS, registerAddress, 1, dataBuffer, sizeofData, TIMEOUT) == HAL_OK) {
 		return READ_SUCCESS;
 
 	}
 	return READ_FAIL;
 }
 
-ADXL345WriteStatus ADXL345_WriteRegisterData(uint16_t registerAddress, uint16_t value){
+static ADXL345WriteStatus ADXL345_WriteRegisterData(I2C_HandleTypeDef *hi2cx, uint16_t registerAddress, uint16_t value){
 
 	uint8_t data[2] = {0};
 	data[0] = registerAddress;
 	data[1] = value;
 
-	if (HAL_I2C_Master_Transmit(&hi2c1, ADXL345_DEVICE_ADDRESS, data, sizeof(data), TIMEOUT) == HAL_OK) {
+	if (HAL_I2C_Master_Transmit(hi2cx, ADXL345_DEVICE_ADDRESS, data, sizeof(data), TIMEOUT) == HAL_OK) {
 		return Write_SUCCESS;
 	}
 
 	return Write_FAIL;
 }
 
-ADXL345InitStatus ADXL345_Init(){
+ADXL345InitStatus ADXL345_Init(I2C_HandleTypeDef *hi2cx){
 
 	uint8_t dataBuffer = 0;
-	ADXL345_ReadRegisterData(DEVID, 1, &dataBuffer);
+	ADXL345_ReadRegisterData(hi2cx, DEVID, 1, &dataBuffer);
 
 	if (dataBuffer != 0xE5) {
 		return INIT_FAIL;
@@ -64,7 +69,7 @@ ADXL345InitStatus ADXL345_Init(){
 
 	tempReg = *((uint8_t*)&powerControl);
 
-	ADXL345_WriteRegisterData(POWER_CTL, tempReg);
+	ADXL345_WriteRegisterData(hi2cx, POWER_CTL, tempReg);
 
 	DataFormatRegister_t  dataFormatControl = {0};
 	dataFormatControl.Range = RANGE_4G;
@@ -77,7 +82,7 @@ ADXL345InitStatus ADXL345_Init(){
 
 	tempReg = *((uint8_t*)&dataFormatControl);
 
-	ADXL345_WriteRegisterData(DATA_FORMAT, tempReg);
+	ADXL345_WriteRegisterData(hi2cx, DATA_FORMAT, tempReg);
 
 
 	BWRATERegister_t BWRATEControl = {0};
@@ -88,18 +93,18 @@ ADXL345InitStatus ADXL345_Init(){
 
 	tempReg = *((uint8_t*)&BWRATEControl);
 
-	ADXL345_WriteRegisterData(BW_RATE, tempReg);
+	ADXL345_WriteRegisterData(hi2cx, BW_RATE, tempReg);
 
 	return INIT_SUCCESS;
 
 }
 
-int16_t ADXL345_getAxisValue(uint8_t axis){
+int16_t ADXL345_getAxisValue(I2C_HandleTypeDef *hi2cx, uint8_t axis){
 
 	uint8_t data[2] = {0};
 	int16_t outputData = 0;
 
-	ADXL345_ReadRegisterData(axis, 2, data);
+	ADXL345_ReadRegisterData(hi2cx, axis, 2, data);
 
 	outputData = ((data[1]<<8) | data[0]);
 
@@ -107,12 +112,12 @@ int16_t ADXL345_getAxisValue(uint8_t axis){
 }
 
 
-float ADXL345_getGValue(uint8_t axis, float scaleFactor){
+float ADXL345_getGValue(I2C_HandleTypeDef *hi2cx, uint8_t axis, float scaleFactor){
 
 	int16_t outputData = 0;
 	float gData = 0;
 
-	outputData = ADXL345_getAxisValue(axis);
+	outputData = ADXL345_getAxisValue(hi2cx, axis);
 	gData = (float) (outputData * scaleFactor);
 
 	return gData;
