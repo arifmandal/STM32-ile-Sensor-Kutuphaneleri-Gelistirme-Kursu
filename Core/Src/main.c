@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "adxl345.h"
+#include "bme280.h"
 
 /* USER CODE END Includes */
 
@@ -44,16 +44,6 @@
 I2C_HandleTypeDef hi2c1;
 
 /* USER CODE BEGIN PV */
-
-ADXL345InitStatus result;
-
-int16_t xValue = 0;
-int16_t yValue = 0;
-int16_t zValue = 0;
-
-float gX = 0;
-float gY = 0;
-float gZ = 0;
 
 /* USER CODE END PV */
 
@@ -101,8 +91,6 @@ int main(void)
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
 
-  result = ADXL345_Init(&hi2c1);
-
 
   /* USER CODE END 2 */
 
@@ -113,13 +101,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  xValue = ADXL345_getAxisValue(&hi2c1, X);
-	  yValue = ADXL345_getAxisValue(&hi2c1, Y);
-	  zValue = ADXL345_getAxisValue(&hi2c1, Z);
-
-	  gX = ADXL345_getGValue(&hi2c1, X, SCALE_FACTOR_4G);
-	  gY = ADXL345_getGValue(&hi2c1, Y, SCALE_FACTOR_4G);
-	  gZ = ADXL345_getGValue(&hi2c1, Z, SCALE_FACTOR_4G);
 	  HAL_GPIO_WritePin(GPIOD, green_Pin | red_Pin | orange_Pin | blue_Pin, GPIO_PIN_SET);
 	  HAL_Delay(20);
   }
