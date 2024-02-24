@@ -45,6 +45,8 @@ I2C_HandleTypeDef hi2c1;
 
 /* USER CODE BEGIN PV */
 
+int deviceAddress = 0;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -90,6 +92,9 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
+
+  deviceAddress = BME280_ScanDeviceID(&hi2c1);
+  BME280_Init(&hi2c1);
 
 
   /* USER CODE END 2 */
