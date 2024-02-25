@@ -46,6 +46,9 @@ I2C_HandleTypeDef hi2c1;
 /* USER CODE BEGIN PV */
 
 int deviceAddress = 0;
+float temperature = 0;
+float pressure = 0;
+float humidity = 0;
 
 /* USER CODE END PV */
 
@@ -93,7 +96,7 @@ int main(void)
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
 
-  deviceAddress = BME280_ScanDeviceID(&hi2c1);
+  //deviceAddress = BME280_ScanDeviceID(&hi2c1);
   BME280_Init(&hi2c1);
 
 
@@ -106,6 +109,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  BME280_ReadSensorData(&hi2c1, &temperature, &pressure, &humidity);
 	  HAL_GPIO_WritePin(GPIOD, green_Pin | red_Pin | orange_Pin | blue_Pin, GPIO_PIN_SET);
 	  HAL_Delay(20);
   }

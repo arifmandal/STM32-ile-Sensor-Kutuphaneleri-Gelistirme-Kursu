@@ -102,6 +102,30 @@ typedef struct{
 
 }Config_Register_t;
 
+typedef struct{
+
+	uint16_t dig_T1;
+	int16_t  dig_T2;
+	int16_t  dig_T3;
+	uint16_t dig_P1;
+	int16_t  dig_P2;
+	int16_t  dig_P3;
+	int16_t  dig_P4;
+	int16_t  dig_P5;
+	int16_t  dig_P6;
+	int16_t  dig_P7;
+	int16_t  dig_P8;
+	int16_t  dig_P9;
+
+	uint8_t dig_H1;
+	int16_t dig_H2;
+	uint8_t dig_H3;
+	int16_t dig_H4;
+	int16_t dig_H5;
+	int8_t dig_H6;
+	uint16_t h4, h5;
+}BME280_Calibration_Parameters_t;
+
 
 int BME280_ScanDeviceID(I2C_HandleTypeDef *hi2cx);
 
@@ -112,4 +136,17 @@ BME280ReadStatus BME280_ReadRegister16Data(I2C_HandleTypeDef *hi2cx, uint16_t re
 BME280WriteStatus BME280_WriteRegisterData(I2C_HandleTypeDef *hi2cx, uint16_t registerAddress, uint16_t value);
 
 BME280InitStatus BME280_Init(I2C_HandleTypeDef *hi2cx);
+
+void BME280_ReadCalibrationData(I2C_HandleTypeDef *hi2cx);
+
+int32_t BME280_ReadCompensateTemperature(int32_t adc_temp, int32_t *fine_temp);
+
+int32_t BME280_ReadCompensatePressure(int32_t adc_press, int32_t fine_temp);
+
+int32_t BME280_ReadCompensateHumidity(int32_t adc_hum, int32_t fine_temp);
+
+void BME280_ReadSensorRegister(I2C_HandleTypeDef *hi2cx, int32_t *temperature, uint32_t *pressure, uint32_t *humidity);
+
+void BME280_ReadSensorData(I2C_HandleTypeDef *hi2cx, float *temperature, float *pressure, float *humidity);
+
 #endif /* INC_BME280_H_ */
