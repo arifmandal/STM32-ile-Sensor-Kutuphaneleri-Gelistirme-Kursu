@@ -28,6 +28,8 @@ int16_t dig_H5;
 int8_t dig_H6;
 uint16_t h4, h5;
 
+#pragma GCC diagnostic ignored "-Wunused-variable"
+
 static BME280_Calibration_Parameters_t BME280_Calibration_Parameters;
 
 int BME280_ScanDeviceID(I2C_HandleTypeDef *hi2cx) {
