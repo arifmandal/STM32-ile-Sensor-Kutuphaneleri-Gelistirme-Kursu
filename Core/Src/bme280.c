@@ -42,7 +42,7 @@ int BME280_ScanDeviceID(I2C_HandleTypeDef *hi2cx) {
 
 }
 
-BME280ReadStatus BME280_ReadRegisterData(I2C_HandleTypeDef *hi2cx,
+static BME280ReadStatus BME280_ReadRegisterData(I2C_HandleTypeDef *hi2cx,
 		uint16_t registerAddress, uint16_t sizeofData, uint8_t *dataBuffer) {
 
 	if (HAL_I2C_Mem_Read(hi2cx, BME280_DEVICE_ADDRESS, registerAddress, 1,
@@ -52,7 +52,7 @@ BME280ReadStatus BME280_ReadRegisterData(I2C_HandleTypeDef *hi2cx,
 	return READ_FAIL;
 }
 
-BME280ReadStatus BME280_ReadRegister16Data(I2C_HandleTypeDef *hi2cx,
+static BME280ReadStatus BME280_ReadRegister16Data(I2C_HandleTypeDef *hi2cx,
 		uint16_t registerAddress, uint16_t sizeofData, uint16_t *dataBuffer) {
 
 	uint8_t tempData[2] = { 0 };
@@ -64,7 +64,7 @@ BME280ReadStatus BME280_ReadRegister16Data(I2C_HandleTypeDef *hi2cx,
 	return READ_FAIL;
 }
 
-BME280WriteStatus BME280_WriteRegisterData(I2C_HandleTypeDef *hi2cx,
+static BME280WriteStatus BME280_WriteRegisterData(I2C_HandleTypeDef *hi2cx,
 		uint16_t registerAddress, uint16_t value) {
 
 	uint8_t data[2] = { 0 };
@@ -80,7 +80,7 @@ BME280WriteStatus BME280_WriteRegisterData(I2C_HandleTypeDef *hi2cx,
 
 }
 
-void BME280_ReadCalibrationData(I2C_HandleTypeDef *hi2cx) {
+static void BME280_ReadCalibrationData(I2C_HandleTypeDef *hi2cx) {
 
 	BME280_ReadRegister16Data(hi2cx, BME280_CALIB00, 2, &dig_T1);
 	BME280_ReadRegister16Data(hi2cx, BME280_CALIB00 + 0x02, 2,
@@ -176,43 +176,7 @@ BME280InitStatus BME280_Init(I2C_HandleTypeDef *hi2cx) {
 	return INIT_SUCCESS;
 }
 
-void BME280_ReadSensorData(I2C_HandleTypeDef *hi2cx, float *temperature,
-		float *pressure, float *humidity) {
-
-	int32_t fixed_temperature;
-	uint32_t fixed_pressure;
-	uint32_t fixed_humidity;
-
-	BME280_ReadSensorRegister(hi2cx, &fixed_temperature, &fixed_pressure,
-			&fixed_humidity);
-
-	*temperature = (float) fixed_temperature / 100;
-	*pressure = (float) (fixed_pressure / 256) / 100;
-	*humidity = (float) fixed_humidity / 1024;
-}
-
-void BME280_ReadSensorRegister(I2C_HandleTypeDef *hi2cx, int32_t *temperature,
-		uint32_t *pressure, uint32_t *humidity) {
-
-	int32_t adcTemperature = 0;
-	int32_t adcPressure = 0;
-	int32_t adcHumidity = 0;
-
-	uint8_t data[8] = { 0 };
-	int32_t fine_temp;
-
-	BME280_ReadRegisterData(hi2cx, BME280_PRESS_MSB, 8, data);
-
-	adcPressure = data[0] << 12 | data[1] << 4 | data[2] >> 4;
-	adcTemperature = data[3] << 12 | data[4] << 4 | data[5] >> 4;
-	adcHumidity = data[6] << 8 | data[7];
-
-	*temperature = BME280_ReadCompensateTemperature(adcTemperature, &fine_temp);
-	*pressure = BME280_ReadCompensatePressure(adcPressure, fine_temp);
-	*humidity = BME280_ReadCompensateHumidity(adcHumidity, fine_temp);
-}
-
-int32_t BME280_ReadCompensateTemperature(int32_t adc_temp, int32_t *fine_temp) {
+static int32_t BME280_ReadCompensateTemperature(int32_t adc_temp, int32_t *fine_temp) {
 
 	int32_t var1, var2;
 	int32_t T = 0;
@@ -228,7 +192,7 @@ int32_t BME280_ReadCompensateTemperature(int32_t adc_temp, int32_t *fine_temp) {
 	return T;
 }
 
-int32_t BME280_ReadCompensatePressure(int32_t adc_press, int32_t fine_temp) {
+static int32_t BME280_ReadCompensatePressure(int32_t adc_press, int32_t fine_temp) {
 
 	int64_t var1, var2, p;
 
@@ -254,7 +218,7 @@ int32_t BME280_ReadCompensatePressure(int32_t adc_press, int32_t fine_temp) {
 
 }
 
-int32_t BME280_ReadCompensateHumidity(int32_t adc_hum, int32_t fine_temp) {
+static int32_t BME280_ReadCompensateHumidity(int32_t adc_hum, int32_t fine_temp) {
 
 	int32_t v_x1_u32r;
 
@@ -275,4 +239,44 @@ int32_t BME280_ReadCompensateHumidity(int32_t adc_hum, int32_t fine_temp) {
 	return v_x1_u32r >> 12;
 
 }
+
+static void BME280_ReadSensorRegister(I2C_HandleTypeDef *hi2cx, int32_t *temperature,
+		uint32_t *pressure, uint32_t *humidity) {
+
+	int32_t adcTemperature = 0;
+	int32_t adcPressure = 0;
+	int32_t adcHumidity = 0;
+
+	uint8_t data[8] = { 0 };
+	int32_t fine_temp;
+
+	BME280_ReadRegisterData(hi2cx, BME280_PRESS_MSB, 8, data);
+
+	adcPressure = data[0] << 12 | data[1] << 4 | data[2] >> 4;
+	adcTemperature = data[3] << 12 | data[4] << 4 | data[5] >> 4;
+	adcHumidity = data[6] << 8 | data[7];
+
+	*temperature = BME280_ReadCompensateTemperature(adcTemperature, &fine_temp);
+	*pressure = BME280_ReadCompensatePressure(adcPressure, fine_temp);
+	*humidity = BME280_ReadCompensateHumidity(adcHumidity, fine_temp);
+}
+
+void BME280_ReadSensorData(I2C_HandleTypeDef *hi2cx, float *temperature,
+		float *pressure, float *humidity) {
+
+	int32_t fixed_temperature;
+	uint32_t fixed_pressure;
+	uint32_t fixed_humidity;
+
+	BME280_ReadSensorRegister(hi2cx, &fixed_temperature, &fixed_pressure,
+			&fixed_humidity);
+
+	*temperature = (float) fixed_temperature / 100;
+	*pressure = (float) (fixed_pressure / 256) / 100;
+	*humidity = (float) fixed_humidity / 1024;
+}
+
+
+
+
 

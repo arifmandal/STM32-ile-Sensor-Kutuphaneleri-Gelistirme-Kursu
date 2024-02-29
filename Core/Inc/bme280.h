@@ -129,23 +129,23 @@ typedef struct{
 
 int BME280_ScanDeviceID(I2C_HandleTypeDef *hi2cx);
 
-BME280ReadStatus BME280_ReadRegisterData(I2C_HandleTypeDef *hi2cx, uint16_t registerAddress, uint16_t sizeofData, uint8_t *dataBuffer);
+//BME280ReadStatus BME280_ReadRegisterData(I2C_HandleTypeDef *hi2cx, uint16_t registerAddress, uint16_t sizeofData, uint8_t *dataBuffer);
 
-BME280ReadStatus BME280_ReadRegister16Data(I2C_HandleTypeDef *hi2cx, uint16_t registerAddress, uint16_t sizeofData, uint16_t *dataBuffer);
+//BME280ReadStatus BME280_ReadRegister16Data(I2C_HandleTypeDef *hi2cx, uint16_t registerAddress, uint16_t sizeofData, uint16_t *dataBuffer);
 
-BME280WriteStatus BME280_WriteRegisterData(I2C_HandleTypeDef *hi2cx, uint16_t registerAddress, uint16_t value);
+//BME280WriteStatus BME280_WriteRegisterData(I2C_HandleTypeDef *hi2cx, uint16_t registerAddress, uint16_t value);
 
 BME280InitStatus BME280_Init(I2C_HandleTypeDef *hi2cx);
 
-void BME280_ReadCalibrationData(I2C_HandleTypeDef *hi2cx);
+//void BME280_ReadCalibrationData(I2C_HandleTypeDef *hi2cx);
 
-int32_t BME280_ReadCompensateTemperature(int32_t adc_temp, int32_t *fine_temp);
+//int32_t BME280_ReadCompensateTemperature(int32_t adc_temp, int32_t *fine_temp);
 
-int32_t BME280_ReadCompensatePressure(int32_t adc_press, int32_t fine_temp);
+//int32_t BME280_ReadCompensatePressure(int32_t adc_press, int32_t fine_temp);
 
-int32_t BME280_ReadCompensateHumidity(int32_t adc_hum, int32_t fine_temp);
+//int32_t BME280_ReadCompensateHumidity(int32_t adc_hum, int32_t fine_temp);
 
-void BME280_ReadSensorRegister(I2C_HandleTypeDef *hi2cx, int32_t *temperature, uint32_t *pressure, uint32_t *humidity);
+//void BME280_ReadSensorRegister(I2C_HandleTypeDef *hi2cx, int32_t *temperature, uint32_t *pressure, uint32_t *humidity);
 
 void BME280_ReadSensorData(I2C_HandleTypeDef *hi2cx, float *temperature, float *pressure, float *humidity);
 
