@@ -51,6 +51,8 @@ I2C_HandleTypeDef hi2c1;
 uint16_t xAxisValue = 0;
 uint16_t yAxisValue = 0;
 
+bool buttonIsPressed = true;
+
 
 /* USER CODE END PV */
 
@@ -114,8 +116,9 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 		getADCValues(&xAxisValue, &yAxisValue, 10000);
+		buttonIsPressed = getButtonState(GPIOA, switch_Pin);
 		HAL_GPIO_WritePin(GPIOD, green_Pin | red_Pin | orange_Pin | blue_Pin, GPIO_PIN_SET);
-		//HAL_Delay(20);
+		HAL_Delay(20);
 	}
   /* USER CODE END 3 */
 }
@@ -299,7 +302,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin : switch_Pin */
   GPIO_InitStruct.Pin = switch_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(switch_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : green_Pin orange_Pin red_Pin blue_Pin */

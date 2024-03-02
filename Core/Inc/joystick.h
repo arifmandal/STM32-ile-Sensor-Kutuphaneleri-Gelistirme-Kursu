@@ -10,6 +10,7 @@
 
 #include "main.h"
 #include "stdbool.h"
+
 #define NUMBEROFAXIS 2
 
 void joystickInit(ADC_HandleTypeDef hadcx);
