@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "keypad4x4.h"
+#include "joystick.h"
 
 /* USER CODE END Includes */
 
@@ -45,7 +45,6 @@ I2C_HandleTypeDef hi2c1;
 
 /* USER CODE BEGIN PV */
 
-uint8_t keyPressed = 0;
 
 /* USER CODE END PV */
 
@@ -93,9 +92,6 @@ int main(void)
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
 
-  keypadInit(GPIOA, ROW1_Pin, ROW2_Pin, ROW3_Pin, ROW4_Pin, COLUMN1_Pin, COLUMN2_Pin, COLUMN3_Pin, COLUMN4_Pin);
-
-  uint32_t lastKeyPressTime = HAL_GetTick();
 
   /* USER CODE END 2 */
 
@@ -105,11 +101,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		readKeypad(GPIOA, &keyPressed);
-		if (HAL_GetTick() - lastKeyPressTime >= 1000) {
-			keyPressed = 0;
-			lastKeyPressTime = HAL_GetTick();
-		}
 		HAL_GPIO_WritePin(GPIOD, green_Pin | red_Pin | orange_Pin | blue_Pin, GPIO_PIN_SET);
 		//HAL_Delay(20);
 	}
