@@ -22,6 +22,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "joystick.h"
+#include "utility.h"
 
 /* USER CODE END Includes */
 
@@ -50,6 +51,7 @@ I2C_HandleTypeDef hi2c1;
 
 uint16_t xAxisValue = 0;
 uint16_t yAxisValue = 0;
+int32_t temp = 0;
 
 bool buttonIsPressed = true;
 
@@ -119,6 +121,9 @@ int main(void)
 		buttonIsPressed = getButtonState(GPIOA, switch_Pin);
 		HAL_GPIO_WritePin(GPIOD, green_Pin | red_Pin | orange_Pin | blue_Pin, GPIO_PIN_SET);
 		HAL_Delay(20);
+
+		temp = CUBE(-9);
+
 	}
   /* USER CODE END 3 */
 }
