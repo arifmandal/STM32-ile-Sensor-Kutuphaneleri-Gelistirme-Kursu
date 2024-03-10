@@ -35,23 +35,20 @@ LIS302DLInitStatus LIS302DL_Init(SPI_HandleTypeDef *hpsi) {
 	CTRL_REG1_Register.Yen = 0x01;
 	CTRL_REG1_Register.Xen = 0x01;
 
-	tempReg = 0x67;
+	tempReg = *((uint8_t*) &CTRL_REG1_Register);
 	uint8_t regAddress = LIS302DL_CTRL_REG1 + LIS302DL_WRITE;
 
-	LIS302DL_CS_LOW
-	;
+	LIS302DL_CS_LOW;
 	HAL_SPI_Transmit(hpsi, &regAddress, 1, HAL_MAX_DELAY);
 	HAL_SPI_Transmit(hpsi, &tempReg, 1, HAL_MAX_DELAY);
-	LIS302DL_CS_HIGH
-	;
+	LIS302DL_CS_HIGH;
 
 	return INIT_SUCCESS;
 }
 
 void LIS302DL_ReadAccel(SPI_HandleTypeDef *hpsi, int8_t *accelData) {
 
-	LIS302DL_CS_LOW
-	;
+	LIS302DL_CS_LOW;
 
 	uint8_t regAddress_X = LIS302DL_OUT_X + LIS302DL_READ;
 	HAL_SPI_Transmit(hpsi, &regAddress_X, 1, HAL_MAX_DELAY);
@@ -65,9 +62,12 @@ void LIS302DL_ReadAccel(SPI_HandleTypeDef *hpsi, int8_t *accelData) {
 	HAL_SPI_Transmit(hpsi, &regAddress_Z, 1, HAL_MAX_DELAY);
 	HAL_SPI_Receive(hpsi, (uint8_t*)&accelData[2], 1, HAL_MAX_DELAY);
 
-	for (int i = 0;i < 3; i++) {
-		accelData[i] *= LIS302DL_SENSITIVITY;
-	}
-
 	LIS302DL_CS_HIGH;
+}
+
+void LIS302DL_ReadgData(SPI_HandleTypeDef *hpsi, int8_t *accelData, float *gData) {
+
+		for (int i = 0;i < 3; i++) {
+			gData[i] = accelData[i] * LIS302DL_SENSITIVITY_2G;
+		}
 }

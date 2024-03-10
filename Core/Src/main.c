@@ -52,6 +52,7 @@ SPI_HandleTypeDef hspi1;
 
 uint8_t whoAmI = 0;
 int8_t accelData[3] = { 0 };
+float gData[3] = { 0 };
 
 /* USER CODE END PV */
 
@@ -116,6 +117,7 @@ int main(void) {
 
 		/* USER CODE BEGIN 3 */
 		LIS302DL_ReadAccel(&hspi1, accelData);
+		LIS302DL_ReadgData(&hspi1, accelData, gData);
 		HAL_Delay(200);
 
 	}
