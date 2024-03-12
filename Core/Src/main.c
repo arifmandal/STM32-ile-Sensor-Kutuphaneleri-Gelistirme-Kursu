@@ -21,8 +21,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "utility.h"
-#include "lis302dl.h"
+#include "ssd1306_conf.h"
+#include "ssd1306.h"
+#include "ssd1306_fonts.h"
+#include "ssd1306_tests.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -66,6 +68,18 @@ static void MX_SPI1_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+int ScanDeviceID() {
+
+	for (uint8_t address = 0; address < 255; address++) {
+		if (HAL_I2C_IsDeviceReady(&hi2c1, address, 1, 100) == HAL_OK) {
+			return address;
+		}
+	}
+
+	return -1; // error
+
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -100,6 +114,8 @@ int main(void) {
 	MX_ADC1_Init();
 	MX_SPI1_Init();
 	/* USER CODE BEGIN 2 */
+	ScanDeviceID();
+	ssd1306_Init();
 
 	/* USER CODE END 2 */
 
@@ -109,6 +125,13 @@ int main(void) {
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
+		/*
+		ssd1306_Fill(Black);
+		ssd1306_SetCursor(10, 10);
+		ssd1306_WriteString("SENSOR", Font_7x10, White);
+		ssd1306_UpdateScreen();
+		*/
+		ssd1306_TestAll();
 
 	}
 	/* USER CODE END 3 */
