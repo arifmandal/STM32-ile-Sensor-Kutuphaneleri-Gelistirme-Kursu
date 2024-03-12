@@ -50,10 +50,6 @@ SPI_HandleTypeDef hspi1;
 
 /* USER CODE BEGIN PV */
 
-uint8_t whoAmI = 0;
-int8_t accelData[3] = { 0 };
-float gData[3] = { 0 };
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -105,9 +101,6 @@ int main(void) {
 	MX_SPI1_Init();
 	/* USER CODE BEGIN 2 */
 
-	whoAmI = LIS302DL_ReadWhoAmI(&hspi1);
-	LIS302DL_Init(&hspi1);
-
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
@@ -116,9 +109,6 @@ int main(void) {
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
-		LIS302DL_ReadAccel(&hspi1, accelData);
-		LIS302DL_ReadgData(&hspi1, accelData, gData);
-		HAL_Delay(200);
 
 	}
 	/* USER CODE END 3 */
