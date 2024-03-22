@@ -9,6 +9,7 @@
 
 char *main_menu_items[] = { "-> Temperature", "-> Humidity", "-> Altitude" };
 uint8_t selectedMenuItem = 0;
+uint32_t encoderValue = 0;
 
 void printMenuItems(uint8_t menuCount) {
 
@@ -35,6 +36,11 @@ void handleMenuNavigation() {
 	printMenuItems(MAIN_MENU_ITEM_COUNT);
 	HAL_Delay(150);
 
+	encoderValue = (TIM1->CNT) >> 3;
+	selectedMenuItem = encoderValue % MAIN_MENU_ITEM_COUNT;
+	ssd1306_WriteString(main_menu_items[selectedMenuItem], Font_7x10,
+					White);
+	/*
 	if (MENU_CLICK) {
 		selectedMenuItem++;
 		ssd1306_WriteString(main_menu_items[selectedMenuItem], Font_7x10,
@@ -43,13 +49,15 @@ void handleMenuNavigation() {
 		if (selectedMenuItem == MAIN_MENU_ITEM_COUNT) {
 			selectedMenuItem = 0;
 		}
-	}
+	}*/
 
 	if (selectedMenuItem == 0 && SELECT_CLICK) {
 		selectedMenuItem = 0;
 		while (1) {
 			printTemperature();
-			if (ESCAPE_CLICK) {
+			HAL_Delay(150);
+			if (SELECT_CLICK) {
+				TIM1->CNT = 0;
 				break;
 			}
 		}
@@ -61,7 +69,9 @@ void handleMenuNavigation() {
 		selectedMenuItem = 0;
 		while (1) {
 			printHumidity();
-			if (ESCAPE_CLICK) {
+			HAL_Delay(150);
+			if (SELECT_CLICK) {
+				TIM1->CNT = 0;
 				break;
 			}
 		}
@@ -73,7 +83,9 @@ void handleMenuNavigation() {
 		selectedMenuItem = 0;
 		while (1) {
 			printAltitude();
-			if (ESCAPE_CLICK) {
+			HAL_Delay(150);
+			if (SELECT_CLICK) {
+				TIM1->CNT = 0;
 				break;
 			}
 		}

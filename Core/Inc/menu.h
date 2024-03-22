@@ -15,7 +15,7 @@
 
 #define MAIN_MENU_ITEM_COUNT    3
 #define MENU_CLICK                (HAL_GPIO_ReadPin(GPIOA, MENU_Pin))
-#define SELECT_CLICK              (HAL_GPIO_ReadPin(GPIOA, SELECT_Pin))
+#define SELECT_CLICK              !(HAL_GPIO_ReadPin(GPIOE, encoderSwitch_Pin))
 #define ESCAPE_CLICK              (HAL_GPIO_ReadPin(GPIOA, ESCAPE_Pin))
 
 void printMenuItems(uint8_t menuCount);

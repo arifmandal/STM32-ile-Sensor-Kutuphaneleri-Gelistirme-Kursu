@@ -65,6 +65,8 @@ void Error_Handler(void);
 #define SELECT_GPIO_Port GPIOA
 #define ESCAPE_Pin GPIO_PIN_2
 #define ESCAPE_GPIO_Port GPIOA
+#define encoderSwitch_Pin GPIO_PIN_10
+#define encoderSwitch_GPIO_Port GPIOE
 #define green_Pin GPIO_PIN_12
 #define green_GPIO_Port GPIOD
 #define orange_Pin GPIO_PIN_13
