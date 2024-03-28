@@ -45,7 +45,7 @@ AT24C256EraseStatus AT24C256_Erase(I2C_HandleTypeDef *hi2cx){
 
 	uint8_t buffer[AT24C256_PAGE_SIZE];
 
-	/*
+	/* other option to fill buffer
 	for (int i = 0; i < AT24C256_PAGE_SIZE; i++) {
 		buffer[i] = 0xff;
 	}
